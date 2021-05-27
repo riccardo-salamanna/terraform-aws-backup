@@ -20,7 +20,6 @@ resource "aws_backup_plan" "ab_plan" {
       schedule                 = lookup(rule.value, "schedule", null)
       start_window             = lookup(rule.value, "start_window", null)
       completion_window        = lookup(rule.value, "completion_window", null)
-      enable_continuous_backup = lookup(rule.value, "enable_continuous_backup", null)
       recovery_point_tags      = length(lookup(rule.value, "recovery_point_tags", {})) == 0 ? var.tags : lookup(rule.value, "recovery_point_tags")
 
       # Lifecycle
@@ -49,17 +48,6 @@ resource "aws_backup_plan" "ab_plan" {
         }
       }
 
-    }
-  }
-
-  # Advanced backup setting
-  dynamic "advanced_backup_setting" {
-    for_each = var.windows_vss_backup ? [1] : []
-    content {
-      backup_options = {
-        WindowsVSS = "enabled"
-      }
-      resource_type = "EC2"
     }
   }
 
